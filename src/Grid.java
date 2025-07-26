@@ -17,11 +17,15 @@ public class Grid extends JPanel {
     private boolean hasData = false;
     private DropTarget dropTarget;
     private GridDropHandler dropHandler;
+    private boolean isWindows;
 
     public Grid(Data d) {
         this.data = d;
         this.hasData = (data.getRows() > 0 && data.getCols() > 0);
-        setOpaque(false);
+        this.isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
+
+        setOpaque(true);
+        setBackground(new Color(0, 0, 0, 0));
         updateSize();
 
         addMouseListener(new MouseAdapter() {
@@ -52,10 +56,17 @@ public class Grid extends JPanel {
         dropTarget = new DropTarget(this, dropHandler);
     }
 
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        if (isWindows) {
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+            g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+        } else {
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        }
 
         if (hasData) {
             paintGrid(g2);
@@ -71,9 +82,15 @@ public class Grid extends JPanel {
         int startY = 15;
 
         g2.setColor(new Color(255, 255, 255, 80));
-        g2.fillRoundRect(startX-8, startY-8,
-                Config.GRID_W * Config.CELL_DRAW + 16,
-                Config.GRID_H * Config.CELL_DRAW + 16, 20, 20);
+        if (isWindows) {
+            g2.fillRect(startX-8, startY-8,
+                    Config.GRID_W * Config.CELL_DRAW + 16,
+                    Config.GRID_H * Config.CELL_DRAW + 16);
+        } else {
+            g2.fillRoundRect(startX-8, startY-8,
+                    Config.GRID_W * Config.CELL_DRAW + 16,
+                    Config.GRID_H * Config.CELL_DRAW + 16, 20, 20);
+        }
 
         for (int r = 0; r < data.getRows(); r++) {
             for (int c = 0; c < data.getCols(); c++) {
@@ -82,20 +99,32 @@ public class Grid extends JPanel {
 
                 Color cellColor = getColor(r, c);
 
-                if (data.getLevel(r, c) == 2) {
+                if (data.getLevel(r, c) == 2 && !isWindows) {
                     int alpha = (int)(255 - beat * 30);
                     cellColor = new Color(cellColor.getRed(), cellColor.getGreen(), cellColor.getBlue(), alpha);
                 }
 
                 g2.setColor(cellColor);
-                g2.fillRoundRect(x, y, Config.CELL_DRAW-1, Config.CELL_DRAW-1, 10, 10);
+                if (isWindows) {
+                    g2.fillRect(x, y, Config.CELL_DRAW-1, Config.CELL_DRAW-1);
+                } else {
+                    g2.fillRoundRect(x, y, Config.CELL_DRAW-1, Config.CELL_DRAW-1, 10, 10);
+                }
 
                 g2.setColor(new Color(255, 255, 255, 120));
-                g2.fillRoundRect(x+2, y+2, Config.CELL_DRAW-5, (Config.CELL_DRAW-1)/3, 8, 8);
+                if (isWindows) {
+                    g2.fillRect(x+2, y+2, Config.CELL_DRAW-5, (Config.CELL_DRAW-1)/3);
+                } else {
+                    g2.fillRoundRect(x+2, y+2, Config.CELL_DRAW-5, (Config.CELL_DRAW-1)/3, 8, 8);
+                }
 
                 g2.setColor(new Color(255, 255, 255, 150));
                 g2.setStroke(new BasicStroke(0.5f));
-                g2.drawRoundRect(x, y, Config.CELL_DRAW-1, Config.CELL_DRAW-1, 10, 10);
+                if (isWindows) {
+                    g2.drawRect(x, y, Config.CELL_DRAW-1, Config.CELL_DRAW-1);
+                } else {
+                    g2.drawRoundRect(x, y, Config.CELL_DRAW-1, Config.CELL_DRAW-1, 10, 10);
+                }
             }
         }
     }
@@ -105,12 +134,22 @@ public class Grid extends JPanel {
         int h = getHeight();
 
         g2.setColor(new Color(255, 255, 255, 60));
-        g2.fillRoundRect(20, 20, w-40, h-40, 30, 30);
+        if (isWindows) {
+            g2.fillRect(20, 20, w-40, h-40);
+        } else {
+            g2.fillRoundRect(20, 20, w-40, h-40, 30, 30);
+        }
 
-        float dashIntensity = 0.5f + beat * 0.3f;
-        g2.setColor(new Color(Config.BLUE.getRed(), Config.BLUE.getGreen(), Config.BLUE.getBlue(), (int)(dashIntensity * 255)));
-        g2.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{10, 10}, 0));
-        g2.drawRoundRect(25, 25, w-50, h-50, 25, 25);
+        if (!isWindows) {
+            float dashIntensity = 0.5f + beat * 0.3f;
+            g2.setColor(new Color(Config.BLUE.getRed(), Config.BLUE.getGreen(), Config.BLUE.getBlue(), (int)(dashIntensity * 255)));
+            g2.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{10, 10}, 0));
+            g2.drawRoundRect(25, 25, w-50, h-50, 25, 25);
+        } else {
+            g2.setColor(Config.BLUE);
+            g2.setStroke(new BasicStroke(2.0f));
+            g2.drawRect(25, 25, w-50, h-50);
+        }
 
         g2.setColor(Config.BLUE);
         Font iconFont = new Font("Segoe UI", Font.BOLD, 48);
@@ -141,22 +180,29 @@ public class Grid extends JPanel {
     }
 
     private void startPulse() {
-        pulse = new Timer(120, e -> {
-            if (up) {
-                beat += 0.03f;
-                if (beat >= 1.0f) {
-                    beat = 1.0f;
-                    up = false;
+        if (isWindows) {
+            pulse = new Timer(500, e -> {
+                beat = beat > 0.5f ? 0.0f : 1.0f;
+                repaint();
+            });
+        } else {
+            pulse = new Timer(120, e -> {
+                if (up) {
+                    beat += 0.03f;
+                    if (beat >= 1.0f) {
+                        beat = 1.0f;
+                        up = false;
+                    }
+                } else {
+                    beat -= 0.03f;
+                    if (beat <= 0.0f) {
+                        beat = 0.0f;
+                        up = true;
+                    }
                 }
-            } else {
-                beat -= 0.03f;
-                if (beat <= 0.0f) {
-                    beat = 0.0f;
-                    up = true;
-                }
-            }
-            repaint();
-        });
+                repaint();
+            });
+        }
         pulse.start();
     }
 
@@ -193,7 +239,6 @@ public class Grid extends JPanel {
             );
 
             System.out.println(info);
-
         }
     }
 
@@ -214,6 +259,7 @@ public class Grid extends JPanel {
         dropHandler.setCallback(callback);
     }
 
+    @Override
     public void removeNotify() {
         super.removeNotify();
         if (pulse != null) {
@@ -232,6 +278,7 @@ public class Grid extends JPanel {
             this.callback = callback;
         }
 
+        @Override
         public void dragEnter(DropTargetDragEvent e) {
             if (e.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
                 e.acceptDrag(DnDConstants.ACTION_COPY);
@@ -240,6 +287,7 @@ public class Grid extends JPanel {
             }
         }
 
+        @Override
         public void drop(DropTargetDropEvent e) {
             try {
                 e.acceptDrop(DnDConstants.ACTION_COPY);
