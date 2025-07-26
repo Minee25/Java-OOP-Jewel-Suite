@@ -28,7 +28,7 @@ public class Config {
     public static final double TOP_BASE = 200.0;
     public static final double GAS_LIMIT = 0.5;
 
-    public static final int WIN_W = 1300;
+    public static final int WIN_W = 1350;
     public static final int WIN_H = 800;
     public static final int CELL_DRAW = 40;
     public static final Boolean WINDOW_MENU = false;
