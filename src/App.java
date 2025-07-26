@@ -20,10 +20,10 @@ public class App extends JFrame {
     private boolean up = true;
 
     public App() {
-        data = new Data();
         setupLook();
-        makeBG();
+        data = new Data();
         setupUI();
+        makeBG();
         makeContent();
         updateAll();
         startBreath();
@@ -32,15 +32,31 @@ public class App extends JFrame {
 
     private void setupLook() {
         try {
+            System.setProperty("sun.awt.noerasebackground", "true");
             UIManager.setLookAndFeel(new FlatLightLaf());
+            System.setProperty("swing.aatext", "true");
+            System.setProperty("awt.useSystemAAFontSettings", "on");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void setupUI() {
+        setTitle(Config.LANG_TITLE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(Config.WIN_W, Config.WIN_H);
+        setLocationRelativeTo(null);
+        setResizable(true);
+        setIgnoreRepaint(false);
+        setMinimumSize(new Dimension(800, 600));
+    }
+
     private void makeBG() {
         bg = new BufferedImage(Config.WIN_W, Config.WIN_H, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = bg.createGraphics();
+
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
         GradientPaint grad = new GradientPaint(0, 0, Config.BG_START, Config.WIN_W, Config.WIN_H, Config.BG_END);
         g2.setPaint(grad);
@@ -67,38 +83,41 @@ public class App extends JFrame {
     }
 
     private void startBreath() {
-        breath = new Timer(150, e -> {
+        breath = new Timer(100, e -> {
             if (up) {
-                glow += 0.015f;
+                glow += 0.02f;
                 if (glow >= 1.0f) {
                     glow = 1.0f;
                     up = false;
                 }
             } else {
-                glow -= 0.015f;
+                glow -= 0.02f;
                 if (glow <= 0.0f) {
                     glow = 0.0f;
                     up = true;
                 }
             }
-            repaint();
+            SwingUtilities.invokeLater(() -> repaint());
         });
         breath.start();
     }
 
-    private void setupUI() {
-        setTitle(Config.LANG_TITLE);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(Config.WIN_W, Config.WIN_H);
-        setLocationRelativeTo(null);
-        setResizable(true);
-    }
-
     private void makeContent() {
         JPanel main = new JPanel() {
+            {
+                setDoubleBuffered(true);
+            }
+
+            @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.drawImage(bg, 0, 0, getWidth(), getHeight(), null);
+
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+
+                if (bg != null) {
+                    g2.drawImage(bg, 0, 0, getWidth(), getHeight(), null);
+                }
 
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, glow * 0.1f));
                 g2.setColor(Color.WHITE);
@@ -110,10 +129,10 @@ public class App extends JFrame {
 
         main.setLayout(new BorderLayout());
         main.setBorder(new EmptyBorder(25, 25, 25, 25));
+        main.setDoubleBuffered(true);
 
         makeTop(main);
         makeMiddle(main);
-
 
         add(main);
     }
@@ -122,9 +141,11 @@ public class App extends JFrame {
         JPanel top = UI.makeGlass();
         top.setLayout(new BorderLayout());
         top.setBorder(new EmptyBorder(20, 25, 20, 25));
+        top.setDoubleBuffered(true);
 
         JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT));
         left.setOpaque(false);
+        left.setDoubleBuffered(true);
 
         JLabel icon = createIconLabel();
 
@@ -137,16 +158,14 @@ public class App extends JFrame {
 
         JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         right.setOpaque(false);
+        right.setDoubleBuffered(true);
 
         JButton about = UI.makeButton(Config.LANG_ABOUT,Config.ORANGE);
         about.setPreferredSize(new Dimension(100, 45));
         about.addActionListener(e -> UI.showAbout(this));
 
-
-
         right.add(about);
         right.add(Box.createHorizontalStrut(10));
-
 
         top.add(left, BorderLayout.WEST);
         top.add(right, BorderLayout.EAST);
@@ -158,6 +177,7 @@ public class App extends JFrame {
         JPanel middle = new JPanel(new BorderLayout(25, 25));
         middle.setOpaque(false);
         middle.setBorder(new EmptyBorder(25, 0, 25, 0));
+        middle.setDoubleBuffered(true);
 
         makeLeft(middle);
         makeRight(middle);
@@ -170,6 +190,7 @@ public class App extends JFrame {
         left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
         left.setBorder(new EmptyBorder(25, 25, 25, 25));
         left.setPreferredSize(new Dimension(320, 0));
+        left.setDoubleBuffered(true);
 
         JLabel ctrlTitle = UI.makeBigLabel(Config.LANG_CONTROL);
         ctrlTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -195,6 +216,7 @@ public class App extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
+        panel.setDoubleBuffered(true);
 
         JLabel label = UI.makeLabel("ความลึกระดับของเหลว (เมตร):");
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -217,7 +239,6 @@ public class App extends JFrame {
         load.setAlignmentX(Component.LEFT_ALIGNMENT);
         load.addActionListener(e -> openFile());
 
-
         panel.add(label);
         panel.add(Box.createVerticalStrut(10));
         panel.add(fluidText);
@@ -234,6 +255,7 @@ public class App extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
+        panel.setDoubleBuffered(true);
 
         JLabel title = UI.makeLabel("คำอธิบาย:");
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -257,10 +279,17 @@ public class App extends JFrame {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         panel.setOpaque(false);
         panel.setMaximumSize(new Dimension(300, 30));
+        panel.setDoubleBuffered(true);
 
         JPanel box = new JPanel() {
+            {
+                setDoubleBuffered(true);
+            }
+
+            @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(color);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
                 g2.setColor(new Color(255, 255, 255, 100));
@@ -283,6 +312,7 @@ public class App extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
+        panel.setDoubleBuffered(true);
 
         JLabel title = UI.makeLabel("ผลลัพธ์:");
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -308,6 +338,7 @@ public class App extends JFrame {
         JPanel right = UI.makeGlass();
         right.setLayout(new BorderLayout());
         right.setBorder(new EmptyBorder(25, 25, 25, 25));
+        right.setDoubleBuffered(true);
 
         JLabel title = UI.makeBigLabel("แผนที่การกระจายแก๊ส");
         title.setHorizontalAlignment(SwingConstants.CENTER);
@@ -315,28 +346,31 @@ public class App extends JFrame {
 
         grid = new Grid(data);
         grid.setFileDropCallback(file -> {
-            if (data.loadFromFile(file.getAbsolutePath())) {
-                updateAll();
-                statusLabel.setText("โหลดไฟล์: " + file.getName());
-                statusLabel.setForeground(Config.SUCCESS);
-                UI.showMessage(this, "สำเร็จ", "โหลดไฟล์เสร็จสิ้น!", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                statusLabel.setText("โหลดไฟล์ไม่สำเร็จ");
-                statusLabel.setForeground(Config.DANGER);
-                UI.showMessage(this, "ข้อผิดพลาด", "ไม่สามารถโหลดไฟล์ได้ กรุณาตรวจสอบรูปแบบไฟล์", JOptionPane.ERROR_MESSAGE);
-            }
+            SwingUtilities.invokeLater(() -> {
+                if (data.loadFromFile(file.getAbsolutePath())) {
+                    updateAll();
+                    statusLabel.setText("โหลดไฟล์: " + file.getName());
+                    statusLabel.setForeground(Config.SUCCESS);
+                    UI.showMessage(this, "สำเร็จ", "โหลดไฟล์เสร็จสิ้น!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    statusLabel.setText("โหลดไฟล์ไม่สำเร็จ");
+                    statusLabel.setForeground(Config.DANGER);
+                    UI.showMessage(this, "ข้อผิดพลาด", "ไม่สามารถโหลดไฟล์ได้ กรุณาตรวจสอบรูปแบบไฟล์", JOptionPane.ERROR_MESSAGE);
+                }
+            });
         });
 
         grid.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 if (!hasGridData()) {
-                    openFile();
+                    SwingUtilities.invokeLater(() -> openFile());
                 }
             }
         });
 
         JPanel gridContainer = new JPanel(new GridBagLayout());
         gridContainer.setOpaque(false);
+        gridContainer.setDoubleBuffered(true);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -375,7 +409,6 @@ public class App extends JFrame {
         return data.getRows() > 0 && data.getCols() > 0;
     }
 
-
     private void openFile() {
         JFileChooser fc = new JFileChooser();
         fc.setDialogTitle("เลือกไฟล์ dept.txt");
@@ -385,16 +418,18 @@ public class App extends JFrame {
         int result = fc.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            if (data.loadFromFile(file.getAbsolutePath())) {
-                updateAll();
-                statusLabel.setText("โหลดไฟล์: " + file.getName());
-                statusLabel.setForeground(Config.SUCCESS);
-                UI.showMessage(this, "สำเร็จ", "โหลดไฟล์เสร็จสิ้น!", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                statusLabel.setText("โหลดไฟล์ไม่สำเร็จ");
-                statusLabel.setForeground(Config.DANGER);
-                UI.showMessage(this, "ข้อผิดพลาด", "ไม่สามารถโหลดไฟล์ได้ กรุณาตรวจสอบรูปแบบไฟล์", JOptionPane.ERROR_MESSAGE);
-            }
+            SwingUtilities.invokeLater(() -> {
+                if (data.loadFromFile(file.getAbsolutePath())) {
+                    updateAll();
+                    statusLabel.setText("โหลดไฟล์: " + file.getName());
+                    statusLabel.setForeground(Config.SUCCESS);
+                    UI.showMessage(this, "สำเร็จ", "โหลดไฟล์เสร็จสิ้น!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    statusLabel.setText("โหลดไฟล์ไม่สำเร็จ");
+                    statusLabel.setForeground(Config.DANGER);
+                    UI.showMessage(this, "ข้อผิดพลาด", "ไม่สามารถโหลดไฟล์ได้ กรุณาตรวจสอบรูปแบบไฟล์", JOptionPane.ERROR_MESSAGE);
+                }
+            });
         }
     }
 
@@ -402,22 +437,29 @@ public class App extends JFrame {
         try {
             double fluid = Double.parseDouble(fluidText.getText());
             data.setFluid(fluid);
-            updateAll();
-            statusLabel.setText("คำนวณเสร็จสิ้น");
-            statusLabel.setForeground(Config.SUCCESS);
+            SwingUtilities.invokeLater(() -> {
+                updateAll();
+                statusLabel.setText("คำนวณเสร็จสิ้น");
+                statusLabel.setForeground(Config.SUCCESS);
+            });
         } catch (NumberFormatException e) {
-            UI.showMessage(this, "ข้อผิดพลาดการป้อนข้อมูล", "กรุณาป้อนตัวเลขที่ถูกต้อง", JOptionPane.ERROR_MESSAGE);
-            statusLabel.setText("ข้อมูลไม่ถูกต้อง");
-            statusLabel.setForeground(Config.DANGER);
+            SwingUtilities.invokeLater(() -> {
+                UI.showMessage(this, "ข้อผิดพลาดการป้อนข้อมูล", "กรุณาป้อนตัวเลขที่ถูกต้อง", JOptionPane.ERROR_MESSAGE);
+                statusLabel.setText("ข้อมูลไม่ถูกต้อง");
+                statusLabel.setForeground(Config.DANGER);
+            });
         }
     }
 
     private void updateAll() {
-        double total = data.getTotalVolume();
-        volumeLabel.setText(String.format("ปริมาตรแก๊สทั้งหมด: %.0f ลบ.ม.", total));
-        grid.update();
+        SwingUtilities.invokeLater(() -> {
+            double total = data.getTotalVolume();
+            volumeLabel.setText(String.format("ปริมาตรแก๊สทั้งหมด: %.0f ลบ.ม.", total));
+            grid.update();
+        });
     }
 
+    @Override
     public void dispose() {
         if (breath != null) {
             breath.stop();
@@ -426,8 +468,15 @@ public class App extends JFrame {
     }
 
     public static void main(String[] args) {
+        System.setProperty("sun.java2d.opengl", "true");
+        System.setProperty("sun.java2d.d3d", "false");
+
         SwingUtilities.invokeLater(() -> {
-            new App();
+            try {
+                new App();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 }
