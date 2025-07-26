@@ -37,7 +37,7 @@ public class App extends JFrame {
         setSize(Config.WIN_W, Config.WIN_H);
         setLocationRelativeTo(null);
         setResizable(true);
-        setMinimumSize(new Dimension(800, 600));
+        setUndecorated(true);
         getContentPane().setBackground(Config.BG_START);
     }
 
@@ -85,13 +85,25 @@ public class App extends JFrame {
         about.setFocusPainted(false);
         about.addActionListener(e -> UI.showAbout(this));
 
+        JButton exit = new JButton(Config.LANG_EXIT);
+        exit.setPreferredSize(new Dimension(100, 45));
+        exit.setBackground(Config.DANGER);
+        exit.setForeground(Color.WHITE);
+        exit.setFont(new Font("Tahoma", Font.BOLD, 14));
+        exit.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        exit.setFocusPainted(false);
+        exit.addActionListener(e -> exitApp());
+
         right.add(about);
+        right.add(exit);
 
         top.add(left, BorderLayout.WEST);
         top.add(right, BorderLayout.EAST);
 
         parent.add(top, BorderLayout.NORTH);
     }
+
+
 
     private void makeMiddle(JPanel parent) {
         JPanel middle = new JPanel(new BorderLayout(25, 25));
@@ -367,6 +379,21 @@ public class App extends JFrame {
         double total = data.getTotalVolume();
         volumeLabel.setText(String.format("ปริมาตรแก๊สทั้งหมด: %.0f ลบ.ม.", total));
         grid.update();
+    }
+
+    private void exitApp(){
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                "คุณต้องการบันทึกไฟล์หรือไม่?",
+                "ยืนยันการทำงาน",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (result == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+
     }
 
     public static void main(String[] args) {

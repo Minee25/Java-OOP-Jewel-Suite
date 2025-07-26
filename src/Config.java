@@ -44,4 +44,5 @@ public class Config {
     public static final String LANG_TITLE = "Jewel Suite";
     public static final String LANG_ABOUT = "About";
     public static final String LANG_CONTROL = "Control";
+    public static final String LANG_EXIT = "Exit";
 }
