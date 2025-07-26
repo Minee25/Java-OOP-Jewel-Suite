@@ -18,32 +18,32 @@ public class App extends JFrame {
     private Timer breath;
     private float glow = 0.0f;
     private boolean up = true;
+    private boolean isWindows;
 
     public App() {
+        isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
         setupLook();
         data = new Data();
         setupUI();
         makeBG();
         makeContent();
         updateAll();
-        startBreath();
+        if (!isWindows) {
+            startBreath();
+        }
         setVisible(true);
     }
 
     private void setupLook() {
         try {
-            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            if (isWindows) {
                 System.setProperty("sun.java2d.noddraw", "true");
                 System.setProperty("sun.java2d.d3d", "false");
                 System.setProperty("sun.java2d.opengl", "false");
                 System.setProperty("swing.volatileImageBufferEnabled", "false");
-                System.setProperty("swing.bufferPerWindow", "true");
             }
 
             UIManager.setLookAndFeel(new FlatLightLaf());
-
-            UIManager.put("Panel.opaque", Boolean.TRUE);
-            UIManager.put("Component.focusWidth", 0);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,7 +58,7 @@ public class App extends JFrame {
         setResizable(true);
         setMinimumSize(new Dimension(800, 600));
 
-        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+        if (isWindows) {
             setBackground(Config.BG_START);
         }
     }
@@ -74,62 +74,45 @@ public class App extends JFrame {
         g2.setPaint(grad);
         g2.fillRect(0, 0, Config.WIN_W, Config.WIN_H);
 
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.15f));
+        if (!isWindows) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.15f));
 
-        RadialGradientPaint orb1 = new RadialGradientPaint(180, 120, 80, new float[]{0.0f, 1.0f},
-                new Color[]{Config.BLUE, new Color(0, 0, 0, 0)});
-        g2.setPaint(orb1);
-        g2.fillOval(100, 40, 160, 160);
+            RadialGradientPaint orb1 = new RadialGradientPaint(180, 120, 80, new float[]{0.0f, 1.0f},
+                    new Color[]{Config.BLUE, new Color(0, 0, 0, 0)});
+            g2.setPaint(orb1);
+            g2.fillOval(100, 40, 160, 160);
 
-        RadialGradientPaint orb2 = new RadialGradientPaint(Config.WIN_W - 120, 150, 100, new float[]{0.0f, 1.0f},
-                new Color[]{Config.SUCCESS, new Color(0, 0, 0, 0)});
-        g2.setPaint(orb2);
-        g2.fillOval(Config.WIN_W - 220, 50, 200, 200);
+            RadialGradientPaint orb2 = new RadialGradientPaint(Config.WIN_W - 120, 150, 100, new float[]{0.0f, 1.0f},
+                    new Color[]{Config.SUCCESS, new Color(0, 0, 0, 0)});
+            g2.setPaint(orb2);
+            g2.fillOval(Config.WIN_W - 220, 50, 200, 200);
 
-        RadialGradientPaint orb3 = new RadialGradientPaint(300, Config.WIN_H - 100, 90, new float[]{0.0f, 1.0f},
-                new Color[]{Config.PURPLE, new Color(0, 0, 0, 0)});
-        g2.setPaint(orb3);
-        g2.fillOval(210, Config.WIN_H - 190, 180, 180);
+            RadialGradientPaint orb3 = new RadialGradientPaint(300, Config.WIN_H - 100, 90, new float[]{0.0f, 1.0f},
+                    new Color[]{Config.PURPLE, new Color(0, 0, 0, 0)});
+            g2.setPaint(orb3);
+            g2.fillOval(210, Config.WIN_H - 190, 180, 180);
+        }
 
         g2.dispose();
     }
 
     private void startBreath() {
-        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-            breath = new Timer(200, e -> {
-                if (up) {
-                    glow += 0.05f;
-                    if (glow >= 1.0f) {
-                        glow = 1.0f;
-                        up = false;
-                    }
-                } else {
-                    glow -= 0.05f;
-                    if (glow <= 0.0f) {
-                        glow = 0.0f;
-                        up = true;
-                    }
+        breath = new Timer(150, e -> {
+            if (up) {
+                glow += 0.015f;
+                if (glow >= 1.0f) {
+                    glow = 1.0f;
+                    up = false;
                 }
-                repaint();
-            });
-        } else {
-            breath = new Timer(100, e -> {
-                if (up) {
-                    glow += 0.02f;
-                    if (glow >= 1.0f) {
-                        glow = 1.0f;
-                        up = false;
-                    }
-                } else {
-                    glow -= 0.02f;
-                    if (glow <= 0.0f) {
-                        glow = 0.0f;
-                        up = true;
-                    }
+            } else {
+                glow -= 0.015f;
+                if (glow <= 0.0f) {
+                    glow = 0.0f;
+                    up = true;
                 }
-                SwingUtilities.invokeLater(() -> repaint());
-            });
-        }
+            }
+            repaint();
+        });
         breath.start();
     }
 
@@ -137,17 +120,13 @@ public class App extends JFrame {
         JPanel main = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g.create();
-
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-                g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
 
                 if (bg != null) {
                     g2.drawImage(bg, 0, 0, getWidth(), getHeight(), null);
                 }
 
-                if (glow > 0) {
+                if (!isWindows && glow > 0) {
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, glow * 0.05f));
                     g2.setColor(Color.WHITE);
                     g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
@@ -164,19 +143,46 @@ public class App extends JFrame {
         makeTop(main);
         makeMiddle(main);
 
-        add(main);
+        setContentPane(main);
     }
 
     private void makeTop(JPanel parent) {
-        JPanel top = UI.makeGlass();
+        JPanel top = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+
+                if (isWindows) {
+                    g2.setColor(new Color(255, 255, 255, 200));
+                    g2.fillRect(0, 0, getWidth(), getHeight());
+                    g2.setColor(new Color(100, 149, 237, 150));
+                    g2.setStroke(new BasicStroke(1.0f));
+                    g2.drawRect(0, 0, getWidth()-1, getHeight()-1);
+                } else {
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setColor(Config.LIGHT_BLUE);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
+                    g2.setColor(Config.WHITE_OVERLAY);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
+                    g2.setColor(new Color(255, 255, 255, 120));
+                    g2.fillRoundRect(2, 2, getWidth()-4, getHeight()/4, 23, 23);
+                    g2.setColor(Config.BLUE_BORDER);
+                    g2.setStroke(new BasicStroke(2.0f));
+                    g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 25, 25);
+                }
+
+                g2.dispose();
+            }
+        };
+
         top.setLayout(new BorderLayout());
         top.setBorder(new EmptyBorder(20, 25, 20, 25));
+        top.setOpaque(false);
 
         JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT));
         left.setOpaque(false);
 
         JLabel icon = createIconLabel();
-
         JLabel title = UI.makeBigLabel(Config.LANG_TITLE);
         title.setForeground(Config.BLUE);
 
@@ -187,12 +193,11 @@ public class App extends JFrame {
         JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         right.setOpaque(false);
 
-        JButton about = UI.makeButton(Config.LANG_ABOUT,Config.ORANGE);
+        JButton about = UI.makeButton(Config.LANG_ABOUT, Config.ORANGE);
         about.setPreferredSize(new Dimension(100, 45));
         about.addActionListener(e -> UI.showAbout(this));
 
         right.add(about);
-        right.add(Box.createHorizontalStrut(10));
 
         top.add(left, BorderLayout.WEST);
         top.add(right, BorderLayout.EAST);
@@ -212,10 +217,38 @@ public class App extends JFrame {
     }
 
     private void makeLeft(JPanel parent) {
-        JPanel left = UI.makeGlass();
+        JPanel left = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+
+                if (isWindows) {
+                    g2.setColor(new Color(255, 255, 255, 200));
+                    g2.fillRect(0, 0, getWidth(), getHeight());
+                    g2.setColor(new Color(100, 149, 237, 150));
+                    g2.setStroke(new BasicStroke(1.0f));
+                    g2.drawRect(0, 0, getWidth()-1, getHeight()-1);
+                } else {
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setColor(Config.LIGHT_BLUE);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
+                    g2.setColor(Config.WHITE_OVERLAY);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
+                    g2.setColor(new Color(255, 255, 255, 120));
+                    g2.fillRoundRect(2, 2, getWidth()-4, getHeight()/4, 23, 23);
+                    g2.setColor(Config.BLUE_BORDER);
+                    g2.setStroke(new BasicStroke(2.0f));
+                    g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 25, 25);
+                }
+
+                g2.dispose();
+            }
+        };
+
         left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
         left.setBorder(new EmptyBorder(25, 25, 25, 25));
         left.setPreferredSize(new Dimension(320, 0));
+        left.setOpaque(false);
 
         JLabel ctrlTitle = UI.makeBigLabel(Config.LANG_CONTROL);
         ctrlTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -270,7 +303,6 @@ public class App extends JFrame {
         panel.add(calc);
         panel.add(Box.createVerticalStrut(15));
         panel.add(load);
-        panel.add(Box.createVerticalStrut(15));
 
         return panel;
     }
@@ -307,11 +339,15 @@ public class App extends JFrame {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(color);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
-                g2.setColor(new Color(255, 255, 255, 100));
-                g2.fillRoundRect(2, 2, getWidth()-4, getHeight()/3, 6, 6);
+                if (isWindows) {
+                    g2.fillRect(0, 0, getWidth(), getHeight());
+                } else {
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
+                    g2.setColor(new Color(255, 255, 255, 100));
+                    g2.fillRoundRect(2, 2, getWidth()-4, getHeight()/3, 6, 6);
+                }
                 g2.dispose();
             }
         };
@@ -353,9 +389,37 @@ public class App extends JFrame {
     }
 
     private void makeRight(JPanel parent) {
-        JPanel right = UI.makeGlass();
+        JPanel right = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+
+                if (isWindows) {
+                    g2.setColor(new Color(255, 255, 255, 200));
+                    g2.fillRect(0, 0, getWidth(), getHeight());
+                    g2.setColor(new Color(100, 149, 237, 150));
+                    g2.setStroke(new BasicStroke(1.0f));
+                    g2.drawRect(0, 0, getWidth()-1, getHeight()-1);
+                } else {
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setColor(Config.LIGHT_BLUE);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
+                    g2.setColor(Config.WHITE_OVERLAY);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
+                    g2.setColor(new Color(255, 255, 255, 120));
+                    g2.fillRoundRect(2, 2, getWidth()-4, getHeight()/4, 23, 23);
+                    g2.setColor(Config.BLUE_BORDER);
+                    g2.setStroke(new BasicStroke(2.0f));
+                    g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 25, 25);
+                }
+
+                g2.dispose();
+            }
+        };
+
         right.setLayout(new BorderLayout());
         right.setBorder(new EmptyBorder(25, 25, 25, 25));
+        right.setOpaque(false);
 
         JLabel title = UI.makeBigLabel("แผนที่การกระจายแก๊ส");
         title.setHorizontalAlignment(SwingConstants.CENTER);
@@ -383,8 +447,7 @@ public class App extends JFrame {
             }
         });
 
-        JPanel gridContainer = new JPanel();
-        gridContainer.setLayout(new BorderLayout());
+        JPanel gridContainer = new JPanel(new BorderLayout());
         gridContainer.setOpaque(false);
         gridContainer.add(grid, BorderLayout.CENTER);
 
