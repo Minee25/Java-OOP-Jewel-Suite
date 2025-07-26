@@ -87,7 +87,7 @@ public class App extends JFrame {
     }
 
     private void setupUI() {
-        setTitle("Jewel Suite - โปรแกรมคำนวณปริมาตรแก๊ส");
+        setTitle(Config.LANG_TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(Config.WIN_W, Config.WIN_H);
         setLocationRelativeTo(null);
@@ -128,7 +128,7 @@ public class App extends JFrame {
 
         JLabel icon = createIconLabel();
 
-        JLabel title = UI.makeBigLabel("Jewel Suite - โปรแกรมคำนวณปริมาตรแก๊ส");
+        JLabel title = UI.makeBigLabel(Config.LANG_TITLE);
         title.setForeground(Config.BLUE);
 
         left.add(icon);
@@ -138,7 +138,7 @@ public class App extends JFrame {
         JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         right.setOpaque(false);
 
-        JButton about = UI.makeButton("เกี่ยวกับ",Config.ORANGE);
+        JButton about = UI.makeButton(Config.LANG_ABOUT,Config.ORANGE);
         about.setPreferredSize(new Dimension(100, 45));
         about.addActionListener(e -> UI.showAbout(this));
 
@@ -171,7 +171,7 @@ public class App extends JFrame {
         left.setBorder(new EmptyBorder(25, 25, 25, 25));
         left.setPreferredSize(new Dimension(320, 0));
 
-        JLabel ctrlTitle = UI.makeBigLabel("การควบคุม");
+        JLabel ctrlTitle = UI.makeBigLabel(Config.LANG_CONTROL);
         ctrlTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         ctrlTitle.setForeground(Config.BLUE);
 

@@ -32,12 +32,16 @@ public class Config {
     public static final int WIN_H = 800;
     public static final int CELL_DRAW = 40;
 
-    public static final Font BIG_FONT = new Font("Tahoma", Font.BOLD, 26);
-    public static final Font MID_FONT = new Font("Tahoma", Font.PLAIN, 14);
-    public static final Font SMALL_FONT = new Font("Tahoma", Font.PLAIN, 13);
-    public static final Font TINY_FONT = new Font("Tahoma", Font.PLAIN, 11);
+    public static final Font BIG_FONT = new Font("Dialog", Font.BOLD, 26);
+    public static final Font MID_FONT = new Font("Dialog", Font.PLAIN, 14);
+    public static final Font SMALL_FONT = new Font("Dialog", Font.PLAIN, 13);
+    public static final Font TINY_FONT = new Font("Dialog", Font.PLAIN, 11);
 
     public static final String APP_ICON_PATH = "src/res/icon.png";
     public static final int ICON_SIZE_SMALL = 64;
     public static final int ICON_SIZE_LARGE = 72;
+
+    public static final String LANG_TITLE = "Jewel Suite";
+    public static final String LANG_ABOUT = "About";
+    public static final String LANG_CONTROL = "Control";
 }
