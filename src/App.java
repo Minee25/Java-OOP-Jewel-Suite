@@ -37,7 +37,7 @@ public class App extends JFrame {
         setSize(Config.WIN_W, Config.WIN_H);
         setLocationRelativeTo(null);
         setResizable(true);
-        setUndecorated(true);
+        setUndecorated(Config.WINDOW_MENU);
         getContentPane().setBackground(Config.BG_START);
     }
 
@@ -80,7 +80,7 @@ public class App extends JFrame {
         about.setPreferredSize(new Dimension(100, 45));
         about.setBackground(Config.ORANGE);
         about.setForeground(Color.WHITE);
-        about.setFont(new Font("Tahoma", Font.BOLD, 14));
+        about.setFont(Config.MID_FONT);
         about.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         about.setFocusPainted(false);
         about.addActionListener(e -> UI.showAbout(this));
@@ -89,7 +89,7 @@ public class App extends JFrame {
         exit.setPreferredSize(new Dimension(100, 45));
         exit.setBackground(Config.DANGER);
         exit.setForeground(Color.WHITE);
-        exit.setFont(new Font("Tahoma", Font.BOLD, 14));
+        exit.setFont(Config.MID_FONT);
         exit.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         exit.setFocusPainted(false);
         exit.addActionListener(e -> exitApp());
@@ -173,7 +173,7 @@ public class App extends JFrame {
         calc.setAlignmentX(Component.LEFT_ALIGNMENT);
         calc.setBackground(Config.BLUE);
         calc.setForeground(Color.WHITE);
-        calc.setFont(new Font("Tahoma", Font.BOLD, 14));
+        calc.setFont(Config.MID_FONT);
         calc.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
         calc.setFocusPainted(false);
         calc.addActionListener(e -> doCalc());
@@ -184,7 +184,7 @@ public class App extends JFrame {
         load.setAlignmentX(Component.LEFT_ALIGNMENT);
         load.setBackground(Config.SUCCESS);
         load.setForeground(Color.WHITE);
-        load.setFont(new Font("Tahoma", Font.BOLD, 14));
+        load.setFont(Config.MID_FONT);
         load.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
         load.setFocusPainted(false);
         load.addActionListener(e -> openFile());

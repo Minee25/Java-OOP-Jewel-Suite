@@ -31,6 +31,7 @@ public class Config {
     public static final int WIN_W = 1300;
     public static final int WIN_H = 800;
     public static final int CELL_DRAW = 40;
+    public static final Boolean WINDOW_MENU = false;
 
     public static final Font BIG_FONT = new Font("Tahoma", Font.BOLD, 26);
     public static final Font MID_FONT = new Font("Tahoma", Font.PLAIN, 14);
@@ -45,4 +46,6 @@ public class Config {
     public static final String LANG_ABOUT = "About";
     public static final String LANG_CONTROL = "Control";
     public static final String LANG_EXIT = "Exit";
+
+
 }
