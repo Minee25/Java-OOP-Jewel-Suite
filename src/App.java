@@ -331,7 +331,7 @@ public class App extends JFrame {
         JFileChooser fc = new JFileChooser();
         fc.setDialogTitle("เลือกไฟล์ dept.txt");
         fc.setFileFilter(new FileNameExtensionFilter("ไฟล์ข้อความ (*.txt)", "txt"));
-        fc.setCurrentDirectory(new File("."));
+        fc.setCurrentDirectory(new File("src"));
 
         int result = fc.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {

@@ -111,8 +111,7 @@ public class Grid extends JPanel {
         g2.drawString(icon, iconX, iconY);
 
         g2.setColor(Config.BLACK_TEXT);
-        Font titleFont = new Font("Dialog", Font.BOLD, 18);
-        g2.setFont(titleFont);
+        g2.setFont(Config.MID_FONT);
         String title = "วางไฟล์ dept.txt ที่นี่";
         fm = g2.getFontMetrics();
         int titleX = (w - fm.stringWidth(title)) / 2;
@@ -120,8 +119,7 @@ public class Grid extends JPanel {
         g2.drawString(title, titleX, titleY);
 
         g2.setColor(Config.GRAY_TEXT);
-        Font subFont = new Font("Dialog", Font.PLAIN, 14);
-        g2.setFont(subFont);
+        g2.setFont(Config.SMALL_FONT);
         String sub = "หรือคลิกเพื่อเลือกไฟล์";
         fm = g2.getFontMetrics();
         int subX = (w - fm.stringWidth(sub)) / 2;
@@ -159,6 +157,7 @@ public class Grid extends JPanel {
                     r+1, c+1, top, base, vol, per,
                     getStatus(data.getLevel(r, c))
             );
+            UI.showMessage(this, "Info", info, JOptionPane.INFORMATION_MESSAGE);
 
             System.out.println(info);
         }
