@@ -1,15 +1,15 @@
 import java.io.*;
 import java.util.*;
 
-public class Data {
+public class DataFile {
 
-    private double[][] base;
-    private double fluid;
+    private double[][] numbers;
+    private double water;
     private int rows;
     private int cols;
 
-    public Data() {
-        this.fluid = Config.DEFAULT_FLUID;
+    public DataFile() {
+        this.water = Settings.DEFAULT_FLUID;
         loadFile();
     }
 
@@ -27,15 +27,15 @@ public class Data {
             }
             s.close();
 
-            this.rows = Config.GRID_H;
-            this.cols = Config.GRID_W;
-            this.base = new double[rows][cols];
+            this.rows = Settings.GRID_H;
+            this.cols = Settings.GRID_W;
+            this.numbers = new double[rows][cols];
 
             int i = 0;
             for (int r = 0; r < rows; r++) {
                 for (int c = 0; c < cols; c++) {
                     if (i < nums.size()) {
-                        base[r][c] = nums.get(i++);
+                        numbers[r][c] = nums.get(i++);
                     }
                 }
             }
@@ -46,39 +46,39 @@ public class Data {
         }
     }
 
-    public double getBase(int r, int c) {
+    public double getBottom(int r, int c) {
         if (r >= 0 && r < rows && c >= 0 && c < cols) {
-            return base[r][c];
+            return numbers[r][c];
         }
         return 0;
     }
 
     public double getTop(int r, int c) {
-        return getBase(r, c) - Config.TOP_BASE;
+        return getBottom(r, c) - Settings.TOP_BASE;
     }
 
     public double getVolume(int r, int c) {
         double top = getTop(r, c);
-        double bottom = getBase(r, c);
+        double bottom = getBottom(r, c);
 
-        if (fluid <= top) {
+        if (water <= top) {
             return 0;
         }
 
-        double depth = Math.min(fluid, bottom) - top;
+        double depth = Math.min(water, bottom) - top;
         if (depth <= 0) return 0;
 
-        return Config.CELL_SIZE * Config.CELL_SIZE * depth;
+        return Settings.CELL_SIZE * Settings.CELL_SIZE * depth;
     }
 
     public double getPercent(int r, int c) {
         double top = getTop(r, c);
-        double bottom = getBase(r, c);
+        double bottom = getBottom(r, c);
         double total = bottom - top;
 
         if (total <= 0) return 0;
 
-        double gas = Math.max(0, Math.min(fluid, bottom) - top);
+        double gas = Math.max(0, Math.min(water, bottom) - top);
         return gas / total;
     }
 
@@ -86,7 +86,7 @@ public class Data {
         double p = getPercent(r, c);
 
         if (p <= 0) return 0;
-        if (p < Config.GAS_LIMIT) return 1;
+        if (p < Settings.GAS_LIMIT) return 1;
         return 2;
     }
 
@@ -100,12 +100,12 @@ public class Data {
         return total;
     }
 
-    public void setFluid(double f) {
-        this.fluid = f;
+    public void setWater(double w) {
+        this.water = w;
     }
 
-    public double getFluid() {
-        return fluid;
+    public double getWater() {
+        return water;
     }
 
     public int getRows() {

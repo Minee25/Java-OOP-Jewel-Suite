@@ -8,100 +8,101 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.List;
 
-public class Grid extends JPanel {
+public class GridUI extends JPanel {
 
-    private Data data;
+    private DataFile data;
     private boolean hasData = false;
-    private DropTarget dropTarget;
-    private GridDropHandler dropHandler;
+    private DropTarget dropBox;
+    private FileDropper dropper;
 
-    public Grid(Data d) {
+    public GridUI(DataFile d) {
         this.data = d;
         this.hasData = (data.getRows() > 0 && data.getCols() > 0);
 
         setOpaque(true);
-        setBackground(Color.WHITE);
+        setBackground(Colors.BG_PANEL);
         updateSize();
 
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (hasData) {
-                    showInfo(e.getX(), e.getY());
+                    showCellInfo(e.getX(), e.getY());
                 }
             }
         });
 
-        setupDropZone();
+        setupDrop();
     }
 
     private void updateSize() {
         if (hasData) {
             setPreferredSize(new Dimension(
-                    Config.GRID_W * Config.CELL_DRAW + 30,
-                    Config.GRID_H * Config.CELL_DRAW + 30
+                    Settings.GRID_W * Settings.CELL_DRAW + 30,
+                    Settings.GRID_H * Settings.CELL_DRAW + 30
             ));
         } else {
             setPreferredSize(new Dimension(700, 380));
         }
     }
 
-    private void setupDropZone() {
-        dropHandler = new GridDropHandler();
-        dropTarget = new DropTarget(this, dropHandler);
+    private void setupDrop() {
+        dropper = new FileDropper();
+        dropBox = new DropTarget(this, dropper);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (hasData) {
-            paintGrid(g2);
+            drawGrid(g2);
         } else {
-            paintDropZone(g2);
+            drawDropZone(g2);
         }
 
         g2.dispose();
     }
 
-    private void paintGrid(Graphics2D g2) {
+    private void drawGrid(Graphics2D g2) {
         int startX = 15;
         int startY = 15;
 
-        g2.setColor(new Color(240, 240, 240));
+        g2.setColor(Colors.BORDER_LIGHT);
         g2.fillRect(startX-5, startY-5,
-                Config.GRID_W * Config.CELL_DRAW + 10,
-                Config.GRID_H * Config.CELL_DRAW + 10);
+                Settings.GRID_W * Settings.CELL_DRAW + 10,
+                Settings.GRID_H * Settings.CELL_DRAW + 10);
 
         for (int r = 0; r < data.getRows(); r++) {
             for (int c = 0; c < data.getCols(); c++) {
-                int x = startX + c * Config.CELL_DRAW;
-                int y = startY + r * Config.CELL_DRAW;
+                int x = startX + c * Settings.CELL_DRAW;
+                int y = startY + r * Settings.CELL_DRAW;
 
-                Color cellColor = getColor(r, c);
+                Color cellColor = getCellColor(r, c);
                 g2.setColor(cellColor);
-                g2.fillRect(x, y, Config.CELL_DRAW-2, Config.CELL_DRAW-2);
+                g2.fillRect(x, y, Settings.CELL_DRAW-2, Settings.CELL_DRAW-2);
 
                 g2.setColor(Color.WHITE);
                 g2.setStroke(new BasicStroke(1.0f));
-                g2.drawRect(x, y, Config.CELL_DRAW-2, Config.CELL_DRAW-2);
+                g2.drawRect(x, y, Settings.CELL_DRAW-2, Settings.CELL_DRAW-2);
             }
         }
     }
 
-    private void paintDropZone(Graphics2D g2) {
+    private void drawDropZone(Graphics2D g2) {
         int w = getWidth();
         int h = getHeight();
 
-        g2.setColor(new Color(245, 245, 245));
+        g2.setColor(Colors.BG_MAIN);
         g2.fillRect(0, 0, w, h);
 
-        g2.setColor(Config.BLUE);
+        g2.setColor(Colors.BLUE);
         g2.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{10, 10}, 0));
         g2.drawRect(20, 20, w-40, h-40);
 
-        g2.setColor(Config.BLUE);
+        g2.setColor(Colors.BLUE);
         Font iconFont = new Font("Dialog", Font.BOLD, 48);
         g2.setFont(iconFont);
         String icon = "📁";
@@ -110,42 +111,42 @@ public class Grid extends JPanel {
         int iconY = h/2 - 20;
         g2.drawString(icon, iconX, iconY);
 
-        g2.setColor(Config.BLACK_TEXT);
-        g2.setFont(Config.MID_FONT);
-        String title = Config.LANG_TITLE_FILE;
+        g2.setColor(Colors.TEXT_DARK);
+        g2.setFont(Settings.MID_FONT);
+        String title = Settings.FILE_TITLE;
         fm = g2.getFontMetrics();
         int titleX = (w - fm.stringWidth(title)) / 2;
         int titleY = h/2 + 20;
         g2.drawString(title, titleX, titleY);
 
-        g2.setColor(Config.GRAY_TEXT);
-        g2.setFont(Config.SMALL_FONT);
-        String sub = Config.LANG_SUPTITLE_FILE;
+        g2.setColor(Colors.TEXT_LIGHT);
+        g2.setFont(Settings.SMALL_FONT);
+        String sub = Settings.FILE_SUB;
         fm = g2.getFontMetrics();
         int subX = (w - fm.stringWidth(sub)) / 2;
         int subY = h/2 + 45;
         g2.drawString(sub, subX, subY);
     }
 
-    private Color getColor(int r, int c) {
+    private Color getCellColor(int r, int c) {
         int level = data.getLevel(r, c);
-        if (level == 0) return Config.RED;
-        if (level == 1) return Config.YELLOW;
-        return Config.GREEN;
+        if (level == 0) return Colors.RED;
+        if (level == 1) return Colors.YELLOW;
+        return Colors.GREEN;
     }
 
-    private void showInfo(int mx, int my) {
+    private void showCellInfo(int mx, int my) {
         int startX = 15;
         int startY = 15;
 
-        int c = (mx - startX) / Config.CELL_DRAW;
-        int r = (my - startY) / Config.CELL_DRAW;
+        int c = (mx - startX) / Settings.CELL_DRAW;
+        int r = (my - startY) / Settings.CELL_DRAW;
 
         if (r >= 0 && r < data.getRows() && c >= 0 && c < data.getCols()) {
             double vol = data.getVolume(r, c);
             double per = data.getPercent(r, c) * 100;
             double top = data.getTop(r, c);
-            double base = data.getBase(r, c);
+            double bottom = data.getBottom(r, c);
 
             String info = String.format(
                     "ช่อง: [%d, %d]\n" +
@@ -154,40 +155,38 @@ public class Grid extends JPanel {
                             "ปริมาตร: %.0f ลบ.ม.\n" +
                             "แก๊ส: %.1f%%\n" +
                             "สถานะ: %s",
-                    r+1, c+1, top, base, vol, per,
-                    getStatus(data.getLevel(r, c))
+                    r+1, c+1, top, bottom, vol, per,
+                    getStatusText(data.getLevel(r, c))
             );
-            UI.showMessage(this, "Info", info, JOptionPane.INFORMATION_MESSAGE);
-
-            System.out.println(info);
+            Display.showMessage(this, "Info", info, JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
-    private String getStatus(int level) {
+    private String getStatusText(int level) {
         if (level == 0) return "ไม่มีแก๊ส";
         if (level == 1) return "แก๊สน้อย";
         return "แก๊สมาก";
     }
 
-    public void update() {
+    public void refresh() {
         this.hasData = (data.getRows() > 0 && data.getCols() > 0);
         updateSize();
         revalidate();
         repaint();
     }
 
-    public void setFileDropCallback(FileDropCallback callback) {
-        dropHandler.setCallback(callback);
+    public void setFileCallback(FileCallback callback) {
+        dropper.setCallback(callback);
     }
 
-    public interface FileDropCallback {
-        void onFileDrop(File file);
+    public interface FileCallback {
+        void onFileDropped(File file);
     }
 
-    private class GridDropHandler extends DropTargetAdapter {
-        private FileDropCallback callback;
+    private class FileDropper extends DropTargetAdapter {
+        private FileCallback callback;
 
-        public void setCallback(FileDropCallback callback) {
+        public void setCallback(FileCallback callback) {
             this.callback = callback;
         }
 
@@ -210,7 +209,7 @@ public class Grid extends JPanel {
                 if (!files.isEmpty()) {
                     File file = files.get(0);
                     if (file.getName().toLowerCase().endsWith(".txt") && callback != null) {
-                        callback.onFileDrop(file);
+                        callback.onFileDropped(file);
                     }
                 }
                 e.dropComplete(true);
