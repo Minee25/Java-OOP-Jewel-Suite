@@ -71,8 +71,8 @@ public class Config {
     public static final String LANG_SUPTITLE_FILE = "or click to select file";
 
     //member1
-    public static final String MEMBER1 = "นายสมชาย";
-    public static final String SID_MEMBER1 = "2055";
+    public static final String MEMBER1 = "วชิรวิทย์ วงค์แสง";
+    public static final String SID_MEMBER1 = "67011212055";
     public static final String POST_MEMBER1 = "Project Manager";
     //member2
     public static final String MEMBER2 = "นายสมศักดิ์";
