@@ -266,9 +266,9 @@ public class UI {
         JPanel teamPanel = new JPanel(new GridLayout(1, 3, 30, 0));
         teamPanel.setBackground(Color.WHITE);
         
-        teamPanel.add(createMemberPanel("src/res/team/member1.png", "นายสมชาย", "2055", "Project Manager"));
-        teamPanel.add(createMemberPanel("src/res/team/member2.png", "นางสาวสมหญิง ", "2056", "Lead Developer"));
-        teamPanel.add(createMemberPanel("src/res/team/member3.png", "นายสมศักดิ์ ", "2138", "UI/UX Designer"));
+        teamPanel.add(createMemberPanel("src/res/team/member1.png", Config.MEMBER1, Config.SID_MEMBER1, Config.POST_MEMBER1));
+        teamPanel.add(createMemberPanel("src/res/team/member2.png", Config.MEMBER2, Config.SID_MEMBER2, Config.POST_MEMBER2));
+        teamPanel.add(createMemberPanel("src/res/team/member3.png", Config.MEMBER3, Config.SID_MEMBER3, Config.POST_MEMBER3));
         
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.setBackground(Color.WHITE);

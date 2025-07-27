@@ -62,8 +62,26 @@ public class Config {
     public static final String LANG_GAS_TABLE = "GAS DISTRIBUTION TABLE";
     public static final String LANG_STATUS_LOADFILE = "Load File : ";
     public static final String LANG_STATUS_SUCCEED = "Succeed";
-    public static final String LANG_STATUS_FILE = "File Loading Complete!";
+    public static final String LANG_STATUS_COM = "File Loading Complete!";
+    public static final String LANG_STATUS_FAILED = "Failed loading file!";
+    public static final String LANG_STATUS_ERE = "Error!";
+    public static final String LANG_STATUS_CHECK = "Unable to load file. Please check file format.";
+    public static final String LANG_CLICK = "Click the file or drag and drop the dept.txt file.";
+    public static final String LANG_TITLE_FILE = "Place the dept.txt file here";
+    public static final String LANG_SUPTITLE_FILE = "or click to select file";
 
+    //member1
+    public static final String MEMBER1 = "นายสมชาย";
+    public static final String SID_MEMBER1 = "2055";
+    public static final String POST_MEMBER1 = "Project Manager";
+    //member2
+    public static final String MEMBER2 = "นายสมศักดิ์";
+    public static final String SID_MEMBER2 = "2026";
+    public static final String POST_MEMBER2 = "Lead Developer";
+    //member3
+    public static final String MEMBER3 = "นางสาวสมหญิง";
+    public static final String SID_MEMBER3 = "2138";
+    public static final String POST_MEMBER3 = "UI/UX Designer";
 
 
 

@@ -293,11 +293,11 @@ public class App extends JFrame {
                 updateAll();
                 statusLabel.setText(Config.LANG_STATUS_LOADFILE + file.getName());
                 statusLabel.setForeground(Config.SUCCESS);
-                UI.showMessage(this, Config.LANG_STATUS_SUCCEED, Config.LANG_STATUS_FILE, JOptionPane.INFORMATION_MESSAGE);
+                UI.showMessage(this, Config.LANG_STATUS_SUCCEED, Config.LANG_STATUS_COM, JOptionPane.INFORMATION_MESSAGE);
             } else {
-                statusLabel.setText("โหลดไฟล์ไม่สำเร็จ");
+                statusLabel.setText(Config.LANG_STATUS_FAILED);
                 statusLabel.setForeground(Config.DANGER);
-                UI.showMessage(this, "ข้อผิดพลาด", "ไม่สามารถโหลดไฟล์ได้ กรุณาตรวจสอบรูปแบบไฟล์", JOptionPane.ERROR_MESSAGE);
+                UI.showMessage(this, Config.LANG_STATUS_ERE, Config.LANG_STATUS_CHECK, JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -309,7 +309,7 @@ public class App extends JFrame {
             }
         });
 
-        JLabel info = new JLabel("คลิกเพื่อเลือกไฟล์ หรือลากวางไฟล์ dept.txt");
+        JLabel info = new JLabel(Config.LANG_CLICK);
         info.setFont(Config.TINY_FONT);
         info.setForeground(Config.GRAY_TEXT);
         info.setHorizontalAlignment(SwingConstants.CENTER);
@@ -351,7 +351,7 @@ public class App extends JFrame {
                 updateAll();
                 statusLabel.setText(Config.LANG_STATUS_LOADFILE + file.getName());
                 statusLabel.setForeground(Config.SUCCESS);
-                UI.showMessage(this, Config.LANG_STATUS_SUCCEED, Config.LANG_STATUS_FILE, JOptionPane.INFORMATION_MESSAGE);
+                UI.showMessage(this, Config.LANG_STATUS_SUCCEED, Config.LANG_STATUS_COM, JOptionPane.INFORMATION_MESSAGE);
             } else {
                 statusLabel.setText("โหลดไฟล์ไม่สำเร็จ");
                 statusLabel.setForeground(Config.DANGER);

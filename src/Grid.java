@@ -112,7 +112,7 @@ public class Grid extends JPanel {
 
         g2.setColor(Config.BLACK_TEXT);
         g2.setFont(Config.MID_FONT);
-        String title = "วางไฟล์ dept.txt ที่นี่";
+        String title = Config.LANG_TITLE_FILE;
         fm = g2.getFontMetrics();
         int titleX = (w - fm.stringWidth(title)) / 2;
         int titleY = h/2 + 20;
@@ -120,7 +120,7 @@ public class Grid extends JPanel {
 
         g2.setColor(Config.GRAY_TEXT);
         g2.setFont(Config.SMALL_FONT);
-        String sub = "หรือคลิกเพื่อเลือกไฟล์";
+        String sub = Config.LANG_SUPTITLE_FILE;
         fm = g2.getFontMetrics();
         int subX = (w - fm.stringWidth(sub)) / 2;
         int subY = h/2 + 45;
