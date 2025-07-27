@@ -74,14 +74,17 @@ public class Config {
     public static final String MEMBER1 = "วชิรวิทย์ วงค์แสง";
     public static final String SID_MEMBER1 = "67011212055";
     public static final String POST_MEMBER1 = "Project Manager";
+    public static final String IMAGE_MEMBER1 = "src/res/team/member1.png";
     //member2
     public static final String MEMBER2 = "นายสมศักดิ์";
     public static final String SID_MEMBER2 = "2026";
     public static final String POST_MEMBER2 = "Lead Developer";
+    public static final String IMAGE_MEMBER2 = "src/res/team/member2.jpg";
     //member3
-    public static final String MEMBER3 = "นางสาวสมหญิง";
+    public static final String MEMBER3= "นางสาวสมหญิง";
     public static final String SID_MEMBER3 = "2138";
     public static final String POST_MEMBER3 = "UI/UX Designer";
+    public static final String IMAGE_MEMBER3 = "src/res/team/member3.png";
 
 
 

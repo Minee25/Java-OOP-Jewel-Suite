@@ -266,9 +266,9 @@ public class UI {
         JPanel teamPanel = new JPanel(new GridLayout(1, 3, 30, 0));
         teamPanel.setBackground(Color.WHITE);
         
-        teamPanel.add(createMemberPanel("src/res/team/member1.png", Config.MEMBER1, Config.SID_MEMBER1, Config.POST_MEMBER1));
-        teamPanel.add(createMemberPanel("src/res/team/member2.png", Config.MEMBER2, Config.SID_MEMBER2, Config.POST_MEMBER2));
-        teamPanel.add(createMemberPanel("src/res/team/member3.png", Config.MEMBER3, Config.SID_MEMBER3, Config.POST_MEMBER3));
+        teamPanel.add(createMemberPanel(Config.IMAGE_MEMBER1, Config.MEMBER1, Config.SID_MEMBER1, Config.POST_MEMBER1));
+        teamPanel.add(createMemberPanel(Config.IMAGE_MEMBER2, Config.MEMBER2, Config.SID_MEMBER2, Config.POST_MEMBER2));
+        teamPanel.add(createMemberPanel(Config.IMAGE_MEMBER3, Config.MEMBER3, Config.SID_MEMBER3, Config.POST_MEMBER3));
         
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.setBackground(Color.WHITE);
@@ -296,8 +296,8 @@ public class UI {
         memberPanel.setLayout(new BoxLayout(memberPanel, BoxLayout.Y_AXIS));
         memberPanel.setBackground(new Color(248, 249, 250));
         memberPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(200, 200, 200), 2),
-            new EmptyBorder(25, 20, 25, 20)
+            BorderFactory.createLineBorder(new Color(200, 200, 200), 0),
+            new EmptyBorder(25, 20, 30, 20)
         ));
         
         JLabel avatarLabel = createImageLabel(imagePath);
@@ -332,7 +332,7 @@ public class UI {
     private static JLabel createImageLabel(String imagePath) {
         try {
             ImageIcon originalIcon = new ImageIcon(imagePath);
-            Image scaledImage = originalIcon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+            Image scaledImage = originalIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
             ImageIcon scaledIcon = new ImageIcon(scaledImage);
             return new JLabel(scaledIcon, SwingConstants.CENTER);
         } catch (Exception e) {
