@@ -362,6 +362,13 @@ public class App extends JFrame {
     }
 
     private void doCalc() {
+        if (!hasGridData()) {
+            UI.showMessage(this, "กรุณาโหลดไฟล์ก่อน", "คุณต้องโหลดไฟล์ dept.txt ก่อนคำนวณ", JOptionPane.WARNING_MESSAGE);
+            statusLabel.setText("ยังไม่มีข้อมูลไฟล์");
+            statusLabel.setForeground(Config.DANGER);
+            return;
+        }
+
         try {
             double fluid = Double.parseDouble(fluidText.getText());
             data.setFluid(fluid);
@@ -384,8 +391,8 @@ public class App extends JFrame {
     private void exitApp(){
         int result = JOptionPane.showConfirmDialog(
                 this,
-                "คุณต้องการบันทึกไฟล์หรือไม่?",
-                "ยืนยันการทำงาน",
+                Config.LANG_TITLE_EXIT,
+                Config.LANG_MSG_EXIT,
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE
         );
