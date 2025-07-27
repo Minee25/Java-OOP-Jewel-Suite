@@ -57,6 +57,16 @@ public class Config {
     public static final String LANG_LOW_GAS = "Low Gas (<50%)";
     public static final String LANG_LOT_GAS = "Lots of Gas (>50%)";
     public static final String LANG_RESULT = "Resultant:";
+    public static final String LANG_TOTAL_GAS = "Total Gas Volume %.0f CB.M";
+    public static final String LANG_STATUS = "Ready";
+    public static final String LANG_GAS_TABLE = "GAS DISTRIBUTION TABLE";
+    public static final String LANG_STATUS_LOADFILE = "Load File : ";
+    public static final String LANG_STATUS_SUCCEED = "Succeed";
+    public static final String LANG_STATUS_FILE = "File Loading Complete!";
+
+
+
+
 
 
 

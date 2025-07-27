@@ -256,12 +256,12 @@ public class App extends JFrame {
         title.setForeground(Config.GRAY_TEXT);
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        volumeLabel = new JLabel("ปริมาตรแก๊สทั้งหมด: 0 ลบ.ม.");
+        volumeLabel = new JLabel(Config.LANG_TOTAL_GAS);
         volumeLabel.setFont(Config.MID_FONT);
         volumeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         volumeLabel.setForeground(Config.BLACK_TEXT);
 
-        statusLabel = new JLabel("พร้อม");
+        statusLabel = new JLabel(Config.LANG_STATUS);
         statusLabel.setFont(Config.TINY_FONT);
         statusLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         statusLabel.setForeground(Config.SUCCESS);
@@ -283,7 +283,7 @@ public class App extends JFrame {
         ));
         right.setBackground(new Color(255, 255, 255, 180));
 
-        JLabel title = new JLabel("แผนที่การกระจายแก๊ส");
+        JLabel title = new JLabel(Config.LANG_GAS_TABLE);
         title.setFont(Config.BIG_FONT);
         title.setHorizontalAlignment(SwingConstants.CENTER);
         title.setForeground(Config.PURPLE);
@@ -292,9 +292,9 @@ public class App extends JFrame {
         grid.setFileDropCallback(file -> {
             if (data.loadFromFile(file.getAbsolutePath())) {
                 updateAll();
-                statusLabel.setText("โหลดไฟล์: " + file.getName());
+                statusLabel.setText(Config.LANG_STATUS_LOADFILE + file.getName());
                 statusLabel.setForeground(Config.SUCCESS);
-                UI.showMessage(this, "สำเร็จ", "โหลดไฟล์เสร็จสิ้น!", JOptionPane.INFORMATION_MESSAGE);
+                UI.showMessage(this, Config.LANG_STATUS_SUCCEED, Config.LANG_STATUS_FILE, JOptionPane.INFORMATION_MESSAGE);
             } else {
                 statusLabel.setText("โหลดไฟล์ไม่สำเร็จ");
                 statusLabel.setForeground(Config.DANGER);
@@ -350,9 +350,9 @@ public class App extends JFrame {
             File file = fc.getSelectedFile();
             if (data.loadFromFile(file.getAbsolutePath())) {
                 updateAll();
-                statusLabel.setText("โหลดไฟล์: " + file.getName());
+                statusLabel.setText(Config.LANG_STATUS_LOADFILE + file.getName());
                 statusLabel.setForeground(Config.SUCCESS);
-                UI.showMessage(this, "สำเร็จ", "โหลดไฟล์เสร็จสิ้น!", JOptionPane.INFORMATION_MESSAGE);
+                UI.showMessage(this, Config.LANG_STATUS_SUCCEED, Config.LANG_STATUS_FILE, JOptionPane.INFORMATION_MESSAGE);
             } else {
                 statusLabel.setText("โหลดไฟล์ไม่สำเร็จ");
                 statusLabel.setForeground(Config.DANGER);
@@ -384,7 +384,7 @@ public class App extends JFrame {
 
     private void updateAll() {
         double total = data.getTotalVolume();
-        volumeLabel.setText(String.format("ปริมาตรแก๊สทั้งหมด: %.0f ลบ.ม.", total));
+        volumeLabel.setText(String.format(Config.LANG_TOTAL_GAS, total));
         grid.update();
     }
 
