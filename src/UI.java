@@ -3,7 +3,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.RoundRectangle2D;
 
 public class UI {
 
@@ -239,6 +238,107 @@ public class UI {
 
 
     public static void showAbout(Component parent) {
-
+        JDialog aboutDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(parent), "About Jewel Suite", true);
+        aboutDialog.setSize(900, 550);
+        aboutDialog.setLocationRelativeTo(parent);
+        aboutDialog.setResizable(false);
+        
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(Color.WHITE);
+        mainPanel.setBorder(new EmptyBorder(40, 40, 40, 40));
+        
+        JLabel titleLabel = new JLabel("Jewel Suite", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Tahoma", Font.BOLD, 32));
+        titleLabel.setForeground(Config.BLUE);
+        titleLabel.setBorder(new EmptyBorder(0, 0, 30, 0));
+        
+        JLabel subtitleLabel = new JLabel("ระบบจำลองการกระจายตัวของแก๊ส", SwingConstants.CENTER);
+        subtitleLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        subtitleLabel.setForeground(Config.GRAY_TEXT);
+        subtitleLabel.setBorder(new EmptyBorder(0, 0, 30, 0));
+        
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setBackground(Color.WHITE);
+        headerPanel.add(titleLabel);
+        headerPanel.add(subtitleLabel);
+        
+        JPanel teamPanel = new JPanel(new GridLayout(1, 3, 30, 0));
+        teamPanel.setBackground(Color.WHITE);
+        
+        teamPanel.add(createMemberPanel("src/res/team/member1.png", "นายสมชาย", "2055", "Project Manager"));
+        teamPanel.add(createMemberPanel("src/res/team/member2.png", "นางสาวสมหญิง ", "2056", "Lead Developer"));
+        teamPanel.add(createMemberPanel("src/res/team/member3.png", "นายสมศักดิ์ ", "2138", "UI/UX Designer"));
+        
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.setBorder(new EmptyBorder(20, 0, 0, 0));
+        JButton closeButton = new JButton("ปิด");
+        closeButton.setPreferredSize(new Dimension(120, 45));
+        closeButton.setBackground(Config.BLUE);
+        closeButton.setForeground(Color.WHITE);
+        closeButton.setFont(Config.MID_FONT);
+        closeButton.setBorder(BorderFactory.createEmptyBorder(12, 25, 12, 25));
+        closeButton.setFocusPainted(false);
+        closeButton.addActionListener(e -> aboutDialog.dispose());
+        buttonPanel.add(closeButton);
+        
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+        mainPanel.add(teamPanel, BorderLayout.CENTER);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        
+        aboutDialog.add(mainPanel);
+        aboutDialog.setVisible(true);
+    }
+    
+    private static JPanel createMemberPanel(String imagePath, String name, String studentId, String position) {
+        JPanel memberPanel = new JPanel();
+        memberPanel.setLayout(new BoxLayout(memberPanel, BoxLayout.Y_AXIS));
+        memberPanel.setBackground(new Color(248, 249, 250));
+        memberPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200), 2),
+            new EmptyBorder(25, 20, 25, 20)
+        ));
+        
+        JLabel avatarLabel = createImageLabel(imagePath);
+        avatarLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        avatarLabel.setBorder(new EmptyBorder(0, 0, 20, 0));
+        
+        JLabel nameLabel = new JLabel(name, SwingConstants.CENTER);
+        nameLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
+        nameLabel.setForeground(Config.BLACK_TEXT);
+        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        JLabel idLabel = new JLabel("รหัสนิสิต: " + studentId, SwingConstants.CENTER);
+        idLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        idLabel.setForeground(Config.GRAY_TEXT);
+        idLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        JLabel positionLabel = new JLabel("ตำแหน่ง: " + position, SwingConstants.CENTER);
+        positionLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        positionLabel.setForeground(Config.PURPLE);
+        positionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        memberPanel.add(avatarLabel);
+        memberPanel.add(nameLabel);
+        memberPanel.add(Box.createVerticalStrut(8));
+        memberPanel.add(idLabel);
+        memberPanel.add(Box.createVerticalStrut(8));
+        memberPanel.add(positionLabel);
+        
+        return memberPanel;
+    }
+    
+    private static JLabel createImageLabel(String imagePath) {
+        try {
+            ImageIcon originalIcon = new ImageIcon(imagePath);
+            Image scaledImage = originalIcon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+            return new JLabel(scaledIcon, SwingConstants.CENTER);
+        } catch (Exception e) {
+            JLabel fallbackLabel = new JLabel("👤", SwingConstants.CENTER);
+            fallbackLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 80));
+            return fallbackLabel;
+        }
     }
 }
