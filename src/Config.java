@@ -49,5 +49,16 @@ public class Config {
     public static final String LANG_EXIT = "Exit";
     public static final String LANG_TITLE_EXIT = "Exit Confirmation";
     public static final String LANG_MSG_EXIT = "Are you sure you want to exit?";
+    public static final String LANG_LABEL = "Liquid depth (M.)";
+    public static final String LANG_CALC = "Calculate";
+    public static final String LANG_LOAD = "Load File";
+    public static final String LANG_DESC = "Description";
+    public static final String LANG_NO_GAS = "NO GAS (0%)";
+    public static final String LANG_LOW_GAS = "Low Gas (<50%)";
+    public static final String LANG_LOT_GAS = "Lots of Gas (>50%)";
+    public static final String LANG_RESULT = "Resultant:";
+
+
+
 
 }

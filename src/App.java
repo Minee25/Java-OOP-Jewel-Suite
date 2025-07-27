@@ -152,7 +152,7 @@ public class App extends JFrame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
 
-        JLabel label = new JLabel("ความลึกระดับของเหลว (เมตร):");
+        JLabel label = new JLabel(Config.LANG_LABEL);
         label.setFont(Config.MID_FONT);
         label.setForeground(Config.GRAY_TEXT);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -167,7 +167,7 @@ public class App extends JFrame {
                 new EmptyBorder(12, 18, 12, 18)
         ));
 
-        JButton calc = new JButton("คำนวณ");
+        JButton calc = new JButton(Config.LANG_CALC);
         calc.setMaximumSize(new Dimension(280, 50));
         calc.setPreferredSize(new Dimension(280, 50));
         calc.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -178,7 +178,7 @@ public class App extends JFrame {
         calc.setFocusPainted(false);
         calc.addActionListener(e -> doCalc());
 
-        JButton load = new JButton("โหลดไฟล์");
+        JButton load = new JButton(Config.LANG_LOAD);
         load.setMaximumSize(new Dimension(280, 50));
         load.setPreferredSize(new Dimension(280, 50));
         load.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -205,14 +205,14 @@ public class App extends JFrame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
 
-        JLabel title = new JLabel("คำอธิบาย:");
+        JLabel title = new JLabel(Config.LANG_DESC);
         title.setFont(Config.MID_FONT);
         title.setForeground(Config.GRAY_TEXT);
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JPanel red = makeColorBox("ไม่มีแก๊ส (0%)", Config.RED);
-        JPanel yellow = makeColorBox("แก๊สน้อย (<50%)", Config.YELLOW);
-        JPanel green = makeColorBox("แก๊สมาก (≥50%)", Config.GREEN);
+        JPanel red = makeColorBox(Config.LANG_NO_GAS, Config.RED);
+        JPanel yellow = makeColorBox(Config.LANG_LOW_GAS, Config.YELLOW);
+        JPanel green = makeColorBox(Config.LANG_LOT_GAS, Config.GREEN);
 
         panel.add(title);
         panel.add(Box.createVerticalStrut(12));
@@ -251,7 +251,7 @@ public class App extends JFrame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
 
-        JLabel title = new JLabel("ผลลัพธ์:");
+        JLabel title = new JLabel(Config.LANG_RESULT);
         title.setFont(Config.MID_FONT);
         title.setForeground(Config.GRAY_TEXT);
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
