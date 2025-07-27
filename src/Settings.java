@@ -20,7 +20,8 @@ public class Settings {
     public static final Font TINY_FONT = new Font("Tahoma", Font.PLAIN, 11);
 
     public static final String APP_ICON_PATH = "src/res/icon.png";
-    public static final int ICON_SIZE_SMALL = 64;
+    public static final int ICON_SIZE_SMALL = 96;
+
 
     public static final String APP_TITLE = "Jewel Suite";
     public static final String BTN_ABOUT = "About";

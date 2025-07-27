@@ -29,6 +29,7 @@ public class Display {
         aboutBox.setSize(850, 480);
         aboutBox.setLocationRelativeTo(parent);
         aboutBox.setResizable(false);
+        aboutBox.setUndecorated(true);
         aboutBox.getContentPane().setBackground(Colors.BG_MAIN);
 
         JPanel main = new JPanel(new BorderLayout()) {
@@ -90,7 +91,7 @@ public class Display {
         buttons.setBorder(new EmptyBorder(20, 0, 0, 0));
         buttons.setOpaque(true);
 
-        JButton close = ButtonHelper.createButton("ปิด", Colors.BLUE, 100, 45);
+        JButton close = ButtonHelper.createButton("ปิด", Colors.DANGER, 100, 45);
         close.addActionListener(e -> aboutBox.dispose());
         buttons.add(close);
 

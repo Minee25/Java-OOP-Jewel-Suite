@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.List;
 
+
 public class GridUI extends JPanel {
 
     private DataFile data;
@@ -24,11 +25,14 @@ public class GridUI extends JPanel {
         updateSize();
 
         addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
                 if (hasData) {
                     showCellInfo(e.getX(), e.getY());
+
                 }
             }
+
         });
 
         setupDrop();
@@ -134,6 +138,7 @@ public class GridUI extends JPanel {
         if (level == 1) return Colors.YELLOW;
         return Colors.GREEN;
     }
+
 
     private void showCellInfo(int mx, int my) {
         int startX = 15;
